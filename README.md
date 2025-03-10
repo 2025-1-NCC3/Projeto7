@@ -14,7 +14,7 @@ Vide tutoriais do PI.
 
 ## Uber's minions
 
-## Integrantes: <a href="https://www.linkedin.com/in/lucasoliveira198/">Lucas Oliveira da Silva</a>, <a href="https://www.linkedin.com/in/matheus-rossaneze-911b191b4/">Matheus Rossaneze</a>, <a href="https://www.linkedin.com/in/phelipe-antonio-de-souza-6271b8321/">Phelipe Antonio</a>, <a href="https://www.linkedin.com/in/victorbarq/">Yusuke Urameshi</a>, <a href="https://www.linkedin.com/in/pedro-schaurich-maia/">Pedro Schaurich Maia</a>
+## Integrantes: <a href="https://www.linkedin.com/in/lucasoliveira198/">Lucas Oliveira da Silva</a>, <a href="https://www.linkedin.com/in/matheus-rossaneze-911b191b4/">Matheus Rossaneze</a>, <a href="https://www.linkedin.com/in/phelipe-antonio-de-souza-6271b8321/">Phelipe Antonio</a>, <a href="https://www.linkedin.com/in/pedro-schaurich-maia/">Pedro Schaurich Maia</a>
 
 ## Professores Orientadores: <a>Marco Aurelio</a>, <a>Katia Milani Lara Bossi</a>, <a>Vinicius Heltai Pacheco</a>, <a>Victor Bruno Alexander Rosetti de Quiroz</a>
 
