@@ -1,16 +1,10 @@
-```sh
-Utilize o site <https://www.toptal.com/developers/gitignore> para gerar seu arquivo gitignore e apague este campo.
-
-Vide tutoriais do PI.
-```
-
 # FECAP - Fundação de Comércio Álvares Penteado
 
 <p align="center">
 <a href= "https://www.fecap.br/"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhZPrRa89Kma0ZZogxm0pi-tCn_TLKeHGVxywp-LXAFGR3B1DPouAJYHgKZGV0XTEf4AE&usqp=CAU" alt="FECAP - Fundação de Comércio Álvares Penteado" border="0"></a>
 </p>
 
-# Projeto 7 - "Nome não definido"
+# Projeto 7 - "Uber's minions"
 
 ## Uber's minions
 
@@ -21,8 +15,8 @@ Vide tutoriais do PI.
 ## Descrição
 
 <p align="center">
-<img src="" alt="NOME DO PROJETO" border="0">
-  Game by <a href="">Nick Youngson</a> <a rel="license" href="">CC BY-SA 3.0</a> <a href="">Pix4free</a>
+<img src="" alt="UBER'S MINIOS" border="0">
+  Project by <a href="https://www.linkedin.com/in/lucasoliveira198/">Lucas Oliveira da Silva</a>, <a href="https://www.linkedin.com/in/matheus-rossaneze-911b191b4/">Matheus Rossaneze</a>, <a href="https://www.linkedin.com/in/phelipe-antonio-de-souza-6271b8321/">Phelipe Antonio</a>, <a href="https://www.linkedin.com/in/pedro-schaurich-maia/">Pedro Schaurich Maia</a>
 </p>
 
 
@@ -38,12 +32,21 @@ Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança d
 -Raiz<br>
 |<br>
 |-->documentos<br>
-  &emsp;|-->antigos<br>
-  &emsp;|Documentação.docx<br>
-|-->executáveis<br>
-  &emsp;|-->windows<br>
-  &emsp;|-->android<br>
-  &emsp;|-->HTML<br>
+  &emsp;|-->entrega 1<br>
+  &emsp; &emsp;|-->análise descritiva de dados<br>
+  &emsp; &emsp;|-->programação orientada a objetos e estrutura de dados<br>
+  &emsp; &emsp;|-->programação para dispositivos móveis<br>
+  &emsp; &emsp;|-->projeto interdiscilpinar_aplicativo móvel<br>
+  &emsp;|-->entrega 2<br>
+  &emsp; &emsp;|-->análise descritiva de dados<br>
+  &emsp; &emsp;|-->programação orientada a objetos e estrutura de dados<br>
+  &emsp; &emsp;|-->programação para dispositivos móveis<br>
+  &emsp; &emsp;|-->projeto interdiscilpinar_aplicativo móvel<br>
+  &emsp;|-->entrega 3<br>
+  &emsp; &emsp;|-->análise descritiva de dados<br>
+  &emsp; &emsp;|-->programação orientada a objetos e estrutura de dados<br>
+  &emsp; &emsp;|-->programação para dispositivos móveis<br>
+  &emsp; &emsp;|-->projeto interdiscilpinar_aplicativo móvel<br>
 |-->imagens<br>
 |-->src<br>
   &emsp;|-->Backend<br>
@@ -57,8 +60,6 @@ A pasta raiz contem dois arquivos que devem ser alterados:
 Há também 4 pastas que seguem da seguinte forma:
 
 <b>documentos</b>: Toda a documentação estará nesta pasta.
-
-<b>executáveis</b>: Binários e executáveis do projeto devem estar nesta pasta.
 
 <b>imagens</b>: Imagens do sistema
 
@@ -75,31 +76,11 @@ Execute o APK e siga as instruções de seu telefone.
 Coloque código do prompt de comnando se for necessário
 ```
 
-<b>Windows:</b>
-
-Não há instalação! Apenas executável!
-Encontre o JOGO.exe na pasta executáveis e execute-o como qualquer outro programa.
-
-```sh
-Coloque código do prompt de comnando se for necessário
-```
-
-<b>HTML:</b>
-
-Não há instalação!
-Encontre o index.html na pasta executáveis e execute-o como uma página WEB (através de algum browser).
-
 ## 💻 Configuração para Desenvolvimento
 
 Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
 
-Para abrir este projeto você necessita das seguintes ferramentas:
-
--<a href="https://godotengine.org/download">GODOT</a>
-
 ```sh
-make install
-npm test
 Coloque código do prompt de comnando se for necessário
 ```
 
@@ -110,10 +91,8 @@ Utilize o link <https://chooser-beta.creativecommons.org/> para fazer uma licen�
 
 Aqui estão as referências usadas no projeto.
 
-1. 
-2. 
-3. 
-4. 
-5. 
-6. 
+1. Servidor passado em sala
+2. Tabelas Tabnet Ministério da Saúde: <http://tabnet.datasus.gov.br/cgi/tabcgi.exe?sim/cnv/obt10uf.def>
+3. Curso de Android Studio (CFBCursos): <https://www.youtube.com/playlist?list=PLx4x_zx8csUhKFaIEC-3ODcoHUEqXjG73>
+
 
