@@ -4,9 +4,9 @@
 <a href= "https://www.fecap.br/"><img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRhZPrRa89Kma0ZZogxm0pi-tCn_TLKeHGVxywp-LXAFGR3B1DPouAJYHgKZGV0XTEf4AE&usqp=CAU" alt="FECAP - Fundação de Comércio Álvares Penteado" border="0"></a>
 </p>
 
-# Projeto 7 - "Uber's minions"
+# Projeto 7 - "Uber - Safer Route"
 
-## Uber's minions
+## Grupo: Uber's minions
 
 ## Integrantes: <a href="https://www.linkedin.com/in/lucasoliveira198/">Lucas Oliveira da Silva</a>, <a href="https://www.linkedin.com/in/matheus-rossaneze-911b191b4/">Matheus Rossaneze</a>, <a href="https://www.linkedin.com/in/phelipe-antonio-de-souza-6271b8321/">Phelipe Antonio</a>, <a href="https://www.linkedin.com/in/pedro-schaurich-maia/">Pedro Schaurich Maia</a>
 
