@@ -54,6 +54,8 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
     private Handler handler = new Handler();
     private Runnable rotaAutoRunnable;
     private static final int INTERVALO_ATUALIZACAO = 10000; // 10 segundos
+    private boolean cameraInicializada = false;
+
 
 
 
@@ -115,7 +117,10 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                                     // Marca no mapa
                                     mMap.clear();
                                     mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
-                                    mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 16));
+                                    if (!cameraInicializada) {
+                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 14));
+                                        cameraInicializada = true;
+                                    }
 
                                     // Se o destino já estiver preenchido, traça a rota
                                     String destinoStr = destino.getText().toString();
