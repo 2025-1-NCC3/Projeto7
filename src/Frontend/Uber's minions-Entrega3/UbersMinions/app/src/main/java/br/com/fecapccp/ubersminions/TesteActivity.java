@@ -2,6 +2,7 @@ package br.com.fecapccp.ubersminions;
 
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -47,10 +48,13 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
 
     private GoogleMap mMap;
     private EditText endereco, destino;
-    private Button pesquisar;
     private Button localAtual;
     private FusedLocationProviderClient fusedLocationClient;
     private static final int REQUEST_LOCATION_PERMISSION = 1;
+    private Handler handler = new Handler();
+    private Runnable rotaAutoRunnable;
+    private static final int INTERVALO_ATUALIZACAO = 10000; // 10 segundos
+
 
 
     @Override
@@ -60,8 +64,7 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
 
         endereco = findViewById(R.id.etEndereco);
         destino = findViewById(R.id.etDestino);
-        pesquisar = findViewById(R.id.btnPesquisar);
-        localAtual = findViewById(R.id.btnLocalAtual);
+        localAtual = findViewById(R.id.btnComecar);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -75,43 +78,6 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
             Toast.makeText(this, "Google Play Services não disponível", Toast.LENGTH_LONG).show();
         }
 
-        pesquisar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String origemStr = endereco.getText().toString();
-                String destinoStr = destino.getText().toString();
-
-                if (!origemStr.isEmpty() && !destinoStr.isEmpty()) {
-                    Geocoder geocoder = new Geocoder(TesteActivity.this);
-                    try {
-                        List<Address> origemLista = geocoder.getFromLocationName(origemStr, 1);
-                        List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
-
-                        if (origemLista != null && !origemLista.isEmpty() &&
-                                destinoLista != null && !destinoLista.isEmpty()) {
-
-                            LatLng origemLatLng = new LatLng(origemLista.get(0).getLatitude(), origemLista.get(0).getLongitude());
-                            LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
-
-                            mMap.clear();
-                            mMap.addMarker(new MarkerOptions().position(origemLatLng).title("Origem"));
-                            mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
-                            mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(origemLatLng, 14));
-
-                            getRoute(origemLatLng, destinoLatLng);
-
-                        } else {
-                            Toast.makeText(TesteActivity.this, "Endereço(s) não encontrado(s)", Toast.LENGTH_SHORT).show();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        Toast.makeText(TesteActivity.this, "Erro ao buscar endereços", Toast.LENGTH_SHORT).show();
-                    }
-                } else {
-                    Toast.makeText(TesteActivity.this, "Preencha origem e destino", Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
 
         localAtual.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -134,14 +100,49 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                                     double longitude = location.getLongitude();
 
                                     LatLng posicaoAtual = new LatLng(latitude, longitude);
+
+                                    // (Opcional) Atualiza campo de origem com o endereço
+                                    Geocoder geocoder = new Geocoder(TesteActivity.this);
+                                    try {
+                                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                                        if (!addresses.isEmpty()) {
+                                            endereco.setText(addresses.get(0).getAddressLine(0));
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                    }
+
+                                    // Marca no mapa
                                     mMap.clear();
                                     mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
                                     mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 16));
+
+                                    // Se o destino já estiver preenchido, traça a rota
+                                    String destinoStr = destino.getText().toString();
+                                    if (!destinoStr.isEmpty()) {
+                                        try {
+                                            List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
+                                            if (destinoLista != null && !destinoLista.isEmpty()) {
+                                                LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
+                                                mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+
+                                                getRoute(posicaoAtual, destinoLatLng);
+                                                iniciarAtualizacaoAutomaticaDeRota();
+                                            } else {
+                                                Toast.makeText(TesteActivity.this, "Destino não encontrado", Toast.LENGTH_SHORT).show();
+                                            }
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                            Toast.makeText(TesteActivity.this, "Erro ao buscar destino", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
                                 } else {
                                     Toast.makeText(TesteActivity.this, "Localização não disponível", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
+
             }
         });
     }
@@ -153,6 +154,55 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
         mMap.addMarker(new MarkerOptions().position(fecap).title("Marcador na FECAP"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fecap, 17));
     }
+
+    private void iniciarAtualizacaoAutomaticaDeRota() {
+        rotaAutoRunnable = new Runnable() {
+            @Override
+            public void run() {
+                if (ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                        ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                    // Permissão ainda não concedida
+                    return;
+                }
+
+                fusedLocationClient.getLastLocation()
+                        .addOnSuccessListener(TesteActivity.this, new OnSuccessListener<Location>() {
+                            @Override
+                            public void onSuccess(Location location) {
+                                if (location != null) {
+                                    LatLng posicaoAtual = new LatLng(location.getLatitude(), location.getLongitude());
+                                    String destinoStr = destino.getText().toString();
+
+                                    if (!destinoStr.isEmpty()) {
+                                        Geocoder geocoder = new Geocoder(TesteActivity.this);
+                                        try {
+                                            List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
+                                            if (destinoLista != null && !destinoLista.isEmpty()) {
+                                                LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
+
+                                                mMap.clear();
+                                                mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
+                                                mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+                                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 14));
+
+                                                getRoute(posicaoAtual, destinoLatLng);
+                                            }
+                                        } catch (IOException e) {
+                                            e.printStackTrace();
+                                        }
+                                    }
+                                }
+                            }
+                        });
+
+                // Agendar próxima execução
+                handler.postDelayed(this, INTERVALO_ATUALIZACAO);
+            }
+        };
+
+        handler.post(rotaAutoRunnable); // Começa agora
+    }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
