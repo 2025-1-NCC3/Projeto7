@@ -18,8 +18,6 @@ import android.location.Location;
 
 import androidx.annotation.NonNull;
 import androidx.core.app.ActivityCompat;
-
-
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -27,12 +25,14 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import org.json.JSONArray;
@@ -43,7 +43,6 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
-
 public class TesteActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
@@ -53,11 +52,12 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
     private static final int REQUEST_LOCATION_PERMISSION = 1;
     private Handler handler = new Handler();
     private Runnable rotaAutoRunnable;
-    private static final int INTERVALO_ATUALIZACAO = 10000; // 10 segundos
+    private static final int INTERVALO_ATUALIZACAO = 6000; // 6 segundos
     private boolean cameraInicializada = false;
 
-
-
+    private Marker marcadorOrigem;
+    private Marker marcadorDestino;
+    private Polyline rotaPolyline;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,13 +80,11 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
             Toast.makeText(this, "Google Play Services não disponível", Toast.LENGTH_LONG).show();
         }
 
-
         localAtual.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-
                     ActivityCompat.requestPermissions(TesteActivity.this,
                             new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                             REQUEST_LOCATION_PERMISSION);
@@ -100,10 +98,8 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                                 if (location != null) {
                                     double latitude = location.getLatitude();
                                     double longitude = location.getLongitude();
-
                                     LatLng posicaoAtual = new LatLng(latitude, longitude);
 
-                                    // (Opcional) Atualiza campo de origem com o endereço
                                     Geocoder geocoder = new Geocoder(TesteActivity.this);
                                     try {
                                         List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
@@ -114,22 +110,23 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                                         e.printStackTrace();
                                     }
 
-                                    // Marca no mapa
-                                    mMap.clear();
-                                    mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
                                     if (!cameraInicializada) {
                                         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 14));
                                         cameraInicializada = true;
                                     }
 
-                                    // Se o destino já estiver preenchido, traça a rota
                                     String destinoStr = destino.getText().toString();
                                     if (!destinoStr.isEmpty()) {
                                         try {
                                             List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
                                             if (destinoLista != null && !destinoLista.isEmpty()) {
                                                 LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
-                                                mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+
+                                                if (marcadorOrigem != null) marcadorOrigem.remove();
+                                                if (marcadorDestino != null) marcadorDestino.remove();
+
+                                                marcadorOrigem = mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
+                                                marcadorDestino = mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
 
                                                 getRoute(posicaoAtual, destinoLatLng);
                                                 iniciarAtualizacaoAutomaticaDeRota();
@@ -141,13 +138,11 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                                             Toast.makeText(TesteActivity.this, "Erro ao buscar destino", Toast.LENGTH_SHORT).show();
                                         }
                                     }
-
                                 } else {
                                     Toast.makeText(TesteActivity.this, "Localização não disponível", Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
-
             }
         });
     }
@@ -166,7 +161,6 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
             public void run() {
                 if (ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
                         ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    // Permissão ainda não concedida
                     return;
                 }
 
@@ -175,9 +169,9 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                             @Override
                             public void onSuccess(Location location) {
                                 if (location != null) {
-                                    LatLng posicaoAtual = new LatLng(location.getLatitude(), location.getLongitude());
-                                    String destinoStr = destino.getText().toString();
+                                    LatLng localAtualLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
+                                    String destinoStr = destino.getText().toString();
                                     if (!destinoStr.isEmpty()) {
                                         Geocoder geocoder = new Geocoder(TesteActivity.this);
                                         try {
@@ -185,12 +179,13 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                                             if (destinoLista != null && !destinoLista.isEmpty()) {
                                                 LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
 
-                                                mMap.clear();
-                                                mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
-                                                mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
-                                                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 14));
+                                                if (marcadorOrigem != null) marcadorOrigem.remove();
+                                                if (marcadorDestino != null) marcadorDestino.remove();
 
-                                                getRoute(posicaoAtual, destinoLatLng);
+                                                marcadorOrigem = mMap.addMarker(new MarkerOptions().position(localAtualLatLng).title("Você"));
+                                                marcadorDestino = mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+
+                                                getRoute(localAtualLatLng, destinoLatLng);
                                             }
                                         } catch (IOException e) {
                                             e.printStackTrace();
@@ -200,25 +195,11 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                             }
                         });
 
-                // Agendar próxima execução
                 handler.postDelayed(this, INTERVALO_ATUALIZACAO);
             }
         };
 
-        handler.post(rotaAutoRunnable); // Começa agora
-    }
-
-
-    @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode == REQUEST_LOCATION_PERMISSION) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                recreate();
-            } else {
-                Toast.makeText(this, "Permissão de localização negada", Toast.LENGTH_SHORT).show();
-            }
-        }
+        handler.post(rotaAutoRunnable);
     }
 
     private void getRoute(LatLng origem, LatLng destino) {
@@ -251,10 +232,14 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
 
                     final List<LatLng> decodedPath = decodePolyline(encodedPoints);
 
-                    runOnUiThread(() -> mMap.addPolyline(new PolylineOptions()
-                            .addAll(decodedPath)
-                            .color(Color.BLUE)
-                            .width(10)));
+                    runOnUiThread(() -> {
+                        if (rotaPolyline != null) rotaPolyline.remove();
+
+                        rotaPolyline = mMap.addPolyline(new PolylineOptions()
+                                .addAll(decodedPath)
+                                .color(Color.BLUE)
+                                .width(10));
+                    });
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
@@ -287,10 +272,21 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
             int dlng = ((result & 1) != 0) ? ~(result >> 1) : (result >> 1);
             lng += dlng;
 
-            LatLng p = new LatLng(lat / 1E5, lng / 1E5);
-            poly.add(p);
+            poly.add(new LatLng(lat / 1E5, lng / 1E5));
         }
 
         return poly;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode == REQUEST_LOCATION_PERMISSION) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                recreate();
+            } else {
+                Toast.makeText(this, "Permissão de localização negada", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 }
