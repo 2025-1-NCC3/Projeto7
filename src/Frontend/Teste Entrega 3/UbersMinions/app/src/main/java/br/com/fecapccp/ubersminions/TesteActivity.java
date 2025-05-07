@@ -178,7 +178,8 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                                                 mMap.addMarker(new MarkerOptions()
                                                         .position(new LatLng(lat, lng))
                                                         .title("Acidente sinalizado")
-                                                        .snippet("Usuário marcou um acidente aqui"));
+                                                        .snippet("Usuário marcou um acidente aqui")
+                                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.acidente)));
                                                 Toast.makeText(TesteActivity.this, "Acidente sinalizado!", Toast.LENGTH_SHORT).show();
                                             })
                                             .setNegativeButton("Cancelar", null)
