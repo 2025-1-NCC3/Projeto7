@@ -17,6 +17,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -34,6 +35,7 @@ import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -59,6 +61,9 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
     private Marker marcadorDestino;
     private Polyline rotaPolyline;
 
+    private LatLng acidenteLatLng = null;
+    private LatLng ultimaLocalizacao = null; // <- NOVO
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,6 +72,8 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
         endereco = findViewById(R.id.etEndereco);
         destino = findViewById(R.id.etDestino);
         localAtual = findViewById(R.id.btnComecar);
+        Button btnSinalizarAcidente = findViewById(R.id.btnSinalizarAcidente);
+        Button btnVerificarAcidente = findViewById(R.id.btnRecalcularRota);
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -80,69 +87,131 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
             Toast.makeText(this, "Google Play Services não disponível", Toast.LENGTH_LONG).show();
         }
 
-        localAtual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-                        ActivityCompat.checkSelfPermission(TesteActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(TesteActivity.this,
-                            new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                            REQUEST_LOCATION_PERMISSION);
-                    return;
-                }
+        localAtual.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION_PERMISSION);
+                return;
+            }
 
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(TesteActivity.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    double latitude = location.getLatitude();
-                                    double longitude = location.getLongitude();
-                                    LatLng posicaoAtual = new LatLng(latitude, longitude);
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    double latitude = location.getLatitude();
+                    double longitude = location.getLongitude();
+                    LatLng posicaoAtual = new LatLng(latitude, longitude);
+                    ultimaLocalizacao = posicaoAtual; // <- ARMAZENA POSIÇÃO INICIAL
 
-                                    Geocoder geocoder = new Geocoder(TesteActivity.this);
-                                    try {
-                                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
-                                        if (!addresses.isEmpty()) {
-                                            endereco.setText(addresses.get(0).getAddressLine(0));
-                                        }
-                                    } catch (IOException e) {
-                                        e.printStackTrace();
-                                    }
+                    Geocoder geocoder = new Geocoder(this);
+                    try {
+                        List<Address> addresses = geocoder.getFromLocation(latitude, longitude, 1);
+                        if (!addresses.isEmpty()) {
+                            endereco.setText(addresses.get(0).getAddressLine(0));
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
 
-                                    if (!cameraInicializada) {
-                                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 14));
-                                        cameraInicializada = true;
-                                    }
+                    if (!cameraInicializada) {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(posicaoAtual, 14));
+                        cameraInicializada = true;
+                    }
 
-                                    String destinoStr = destino.getText().toString();
-                                    if (!destinoStr.isEmpty()) {
-                                        try {
-                                            List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
-                                            if (destinoLista != null && !destinoLista.isEmpty()) {
-                                                LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
+                    String destinoStr = destino.getText().toString();
+                    if (!destinoStr.isEmpty()) {
+                        try {
+                            List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
+                            if (destinoLista != null && !destinoLista.isEmpty()) {
+                                LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
 
-                                                if (marcadorOrigem != null) marcadorOrigem.remove();
-                                                if (marcadorDestino != null) marcadorDestino.remove();
+                                if (marcadorOrigem != null) marcadorOrigem.remove();
+                                if (marcadorDestino != null) marcadorDestino.remove();
 
-                                                marcadorOrigem = mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
-                                                marcadorDestino = mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+                                marcadorOrigem = mMap.addMarker(new MarkerOptions().position(posicaoAtual).title("Você está aqui"));
+                                marcadorDestino = mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
 
-                                                getRoute(posicaoAtual, destinoLatLng);
-                                                iniciarAtualizacaoAutomaticaDeRota();
-                                            } else {
-                                                Toast.makeText(TesteActivity.this, "Destino não encontrado", Toast.LENGTH_SHORT).show();
-                                            }
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                            Toast.makeText(TesteActivity.this, "Erro ao buscar destino", Toast.LENGTH_SHORT).show();
-                                        }
-                                    }
-                                } else {
-                                    Toast.makeText(TesteActivity.this, "Localização não disponível", Toast.LENGTH_SHORT).show();
-                                }
+                                getRoute(posicaoAtual, destinoLatLng);
+                                iniciarAtualizacaoAutomaticaDeRota();
+                            } else {
+                                Toast.makeText(this, "Destino não encontrado", Toast.LENGTH_SHORT).show();
                             }
-                        });
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                            Toast.makeText(this, "Erro ao buscar destino", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                } else {
+                    Toast.makeText(this, "Localização não disponível", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        btnSinalizarAcidente.setOnClickListener(v -> {
+            if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(this,
+                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                        REQUEST_LOCATION_PERMISSION);
+                return;
+            }
+
+            fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                if (location != null) {
+                    double lat = location.getLatitude();
+                    double lng = location.getLongitude();
+
+                    new AlertDialog.Builder(this)
+                            .setTitle("Confirmar sinalização de acidente")
+                            .setMessage("Deseja sinalizar um acidente nas coordenadas:\nLatitude: " + lat + "\nLongitude: " + lng)
+                            .setPositiveButton("Sim", (dialog, which) -> {
+                                acidenteLatLng = new LatLng(lat, lng);
+
+                                mMap.addMarker(new MarkerOptions()
+                                        .position(acidenteLatLng)
+                                        .title("Acidente sinalizado")
+                                        .snippet("Usuário marcou um acidente aqui")
+                                        .icon(BitmapDescriptorFactory.fromResource(R.drawable.acidente)));
+
+                                Toast.makeText(this, "Acidente sinalizado!", Toast.LENGTH_SHORT).show();
+                            })
+                            .setNegativeButton("Cancelar", null)
+                            .show();
+                } else {
+                    Toast.makeText(this, "Localização não disponível", Toast.LENGTH_SHORT).show();
+                }
+            });
+        });
+
+        btnVerificarAcidente.setOnClickListener(v -> {
+            if (acidenteLatLng == null) {
+                Toast.makeText(this, "Nenhum acidente sinalizado.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            Toast.makeText(this, "Recalculando rota evitando o acidente...", Toast.LENGTH_SHORT).show();
+            LatLng novaOrigem = new LatLng(acidenteLatLng.latitude + 0.001, acidenteLatLng.longitude);
+
+            String destinoStr = destino.getText().toString();
+            if (!destinoStr.isEmpty()) {
+                Geocoder geocoder = new Geocoder(this);
+                try {
+                    List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
+                    if (destinoLista != null && !destinoLista.isEmpty()) {
+                        LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
+
+                        if (marcadorOrigem != null) marcadorOrigem.remove();
+                        if (marcadorDestino != null) marcadorDestino.remove();
+
+                        marcadorOrigem = mMap.addMarker(new MarkerOptions().position(novaOrigem).title("Nova origem (evitando acidente)"));
+                        marcadorDestino = mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+
+                        getRoute(novaOrigem, destinoLatLng);
+                        ultimaLocalizacao = novaOrigem; // <- Atualiza última localização
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
             }
         });
     }
@@ -164,42 +233,56 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                     return;
                 }
 
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(TesteActivity.this, new OnSuccessListener<Location>() {
-                            @Override
-                            public void onSuccess(Location location) {
-                                if (location != null) {
-                                    LatLng localAtualLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+                fusedLocationClient.getLastLocation().addOnSuccessListener(location -> {
+                    if (location != null) {
+                        LatLng localAtualLatLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-                                    String destinoStr = destino.getText().toString();
-                                    if (!destinoStr.isEmpty()) {
-                                        Geocoder geocoder = new Geocoder(TesteActivity.this);
-                                        try {
-                                            List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
-                                            if (destinoLista != null && !destinoLista.isEmpty()) {
-                                                LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
+                        boolean estaParado = ultimaLocalizacao != null && calcularDistancia(localAtualLatLng, ultimaLocalizacao) < 10.0; // 10 metros
 
-                                                if (marcadorOrigem != null) marcadorOrigem.remove();
-                                                if (marcadorDestino != null) marcadorDestino.remove();
+                        LatLng origemUsada;
+                        if (estaParado && acidenteLatLng != null &&
+                                calcularDistancia(localAtualLatLng, acidenteLatLng) < 20.0) {
+                            origemUsada = new LatLng(acidenteLatLng.latitude + 0.001, acidenteLatLng.longitude);
+                        } else {
+                            origemUsada = localAtualLatLng;
+                        }
 
-                                                marcadorOrigem = mMap.addMarker(new MarkerOptions().position(localAtualLatLng).title("Você"));
-                                                marcadorDestino = mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+                        ultimaLocalizacao = localAtualLatLng;
 
-                                                getRoute(localAtualLatLng, destinoLatLng);
-                                            }
-                                        } catch (IOException e) {
-                                            e.printStackTrace();
-                                        }
-                                    }
+                        String destinoStr = destino.getText().toString();
+                        if (!destinoStr.isEmpty()) {
+                            Geocoder geocoder = new Geocoder(TesteActivity.this);
+                            try {
+                                List<Address> destinoLista = geocoder.getFromLocationName(destinoStr, 1);
+                                if (destinoLista != null && !destinoLista.isEmpty()) {
+                                    LatLng destinoLatLng = new LatLng(destinoLista.get(0).getLatitude(), destinoLista.get(0).getLongitude());
+
+                                    if (marcadorOrigem != null) marcadorOrigem.remove();
+                                    if (marcadorDestino != null) marcadorDestino.remove();
+
+                                    marcadorOrigem = mMap.addMarker(new MarkerOptions().position(origemUsada).title("Você"));
+                                    marcadorDestino = mMap.addMarker(new MarkerOptions().position(destinoLatLng).title("Destino"));
+
+                                    getRoute(origemUsada, destinoLatLng);
                                 }
+                            } catch (IOException e) {
+                                e.printStackTrace();
                             }
-                        });
+                        }
+                    }
+                });
 
                 handler.postDelayed(this, INTERVALO_ATUALIZACAO);
             }
         };
 
         handler.post(rotaAutoRunnable);
+    }
+
+    private double calcularDistancia(LatLng a, LatLng b) {
+        float[] results = new float[1];
+        Location.distanceBetween(a.latitude, a.longitude, b.latitude, b.longitude, results);
+        return results[0]; // distância em metros
     }
 
     private void getRoute(LatLng origem, LatLng destino) {
