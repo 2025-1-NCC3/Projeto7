@@ -15,16 +15,15 @@
 ## Descrição
 
 <p align="center">
-<img src="" alt="UBER'S MINIONS" border="0">
-  Project by <a href="https://www.linkedin.com/in/lucasoliveira198/">Lucas Oliveira da Silva</a>, <a href="https://www.linkedin.com/in/matheus-rossaneze-911b191b4/">Matheus Rossaneze</a>, <a href="https://www.linkedin.com/in/phelipe-antonio-de-souza-6271b8321/">Phelipe Antonio</a>, <a href="https://www.linkedin.com/in/pedro-schaurich-maia/">Pedro Schaurich Maia</a>
+  <img src="https://i.postimg.cc/NMgjQ8zp/20250514-2012-Logotipo-Safer-Routes-simple-compose-01jv8h0k9mew4rrgxtz50x36zh.png' border='0' alt='20250514-2012-Logotipo-Safer-Routes-simple-compose-01jv8h0k9mew4rrgxtz50x36zh" alt="UBER - SAFER ROUTES" border="0">
+  Uber - Safer Routes feito por: <a href="https://www.linkedin.com/in/lucasoliveira198/">Lucas Oliveira da Silva</a>, <a href="https://www.linkedin.com/in/matheus-rossaneze-911b191b4/">Matheus Rossaneze</a>, <a href="https://www.linkedin.com/in/phelipe-antonio-de-souza-6271b8321/">Phelipe Antonio</a>, <a href="https://www.linkedin.com/in/pedro-schaurich-maia/">Pedro Schaurich Maia</a>
 </p>
 
 
-Projeto construído para que usuários e motoristas possam relatar acidentes com carros, acidentes ambientais, assaltos, entre outros dentro do próprio aplicativo da uber, sinalizando outros usuários próximos da localização relatada e também dando a possibilidade do passageiro solicitar a recalculação da rota, para que possa desviar do acidente.
+Projeto construído para que usuários e motoristas possam relatar acidentes com carros, acidentes dentro do aplicativo durante a corrida, dando a possibilidade do passageiro solicitar a recalculação da rota, para que possa desviar do acidente.
 <br><br>
 Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança durante as viagens!
 <br><br>
-
 
 
 ## 🛠 Estrutura de pastas
@@ -53,28 +52,17 @@ Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança d
   &emsp;|-->Frontend<br>
 |readme.md<br>
 
-A pasta raiz contem dois arquivos que devem ser alterados:
-
-<b>README.MD</b>: Arquivo que serve como guia e explicação geral sobre seu projeto. O mesmo que você está lendo agora.
-
-Há também 3 pastas que seguem da seguinte forma:
-
-<b>documentos</b>: Toda a documentação estará nesta pasta.
-
-<b>imagens</b>: Imagens do sistema
-
-<b>src</b>: Pasta que contém o código fonte.
 
 ## 🛠 Instalação
 
 <b>Android:</b>
 
-Faça o Download do APP.apk no seu celular.
-Execute o APK e siga as instruções de seu telefone.
+1. Abra o arquivo final no Android Studio, certifique que o Gradle está sincronizado corretamente, vá no Menu Principal e siga a ordem:
+2. Build -> Build App Bundle(s) / App APK(s) -> Build APK(s)
+3. Após seguir esses passos, clique em "locate" na notificação do Android Studio sobre o build.
+4. Deverá aparecer um arquivo com o nome "app-debug.apk"
+5. Conecte um cabo USB no PC/notebook e no seu aparelho e mova o arquivo para uma pasta no seu celular
 
-```sh
-Coloque código do prompt de comnando se for necessário
-```
 
 ## 💻 Configuração para Desenvolvimento
 
