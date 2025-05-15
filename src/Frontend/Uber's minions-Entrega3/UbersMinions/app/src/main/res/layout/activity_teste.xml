@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TesteActivity">
+    tools:context="br.fecap.pi.ubersaferroutes.TesteActivity">
 
     <!-- EditText invisível para endereço adicional (não usado atualmente) -->
     <EditText

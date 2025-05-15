@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'br.com.fecapccp.ubersminions'
+    namespace 'br.fecap.pi.ubersaferroutes'
     compileSdk 35
 
     defaultConfig {
-        applicationId "br.com.fecapccp.ubersminions"
+        applicationId "br.fecap.pi.ubersaferroutes"
         minSdk 24
         targetSdk 35
         versionCode 1

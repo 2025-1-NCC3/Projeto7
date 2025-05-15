@@ -1,4 +1,4 @@
-package br.com.fecapccp.ubersminions;
+package br.fecap.pi.ubersaferroutes;
 
 import java.io.IOException;
 

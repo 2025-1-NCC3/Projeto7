@@ -1,4 +1,4 @@
-package br.com.fecapccp.ubersminions;
+package br.fecap.pi.ubersaferroutes;
 
 public class ApiResponse {
     private String message;

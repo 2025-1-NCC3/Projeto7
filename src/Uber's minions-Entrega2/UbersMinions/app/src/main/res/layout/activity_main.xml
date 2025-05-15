@@ -6,20 +6,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#000"
-    tools:context=".MainActivity">
+    tools:context="br.fecap.pi.ubersaferroutes.MainActivity">
 
-    <TextView
-        android:id="@+id/TituloMain"
+    <TextView android:id="@+id/TituloMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="UBER"
+        android:text="SAFER ROUTES"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
         android:textColor="#fff"
-        android:textSize="60sp"
+        android:textSize="40sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.2" />
+        app:layout_constraintVertical_bias="0.26" />
 
     <Button
         android:id="@+id/botaoEntrar"
@@ -36,7 +38,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.55" />
+        app:layout_constraintVertical_bias="0.6" />
 
     <Button
         android:id="@+id/botaoCadastrar"
@@ -54,9 +56,9 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.7" />
+        app:layout_constraintVertical_bias="0.8" />
 
-    <Button
+    <!--<Button
         android:id="@+id/botaoPularLogin"
         android:layout_width="0dp"
         android:layout_height="73dp"
@@ -72,6 +74,8 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.85" />
+        app:layout_constraintVertical_bias="0.85" />-->
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,10 +1,11 @@
-package br.com.fecapccp.ubersminions;
+package br.fecap.pi.ubersaferroutes;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import androidx.appcompat.app.AppCompatActivity;
+
+import br.fecap.pi.ubersaferroutes.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -28,10 +29,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Botão "Entrar Anonimamente" → Não faz nada
-        Button btnPularLogin = findViewById(R.id.botaoPularLogin);
-        btnPularLogin.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, TesteActivity.class);
-            startActivity(intent);
-        });
+        //Button btnPularLogin = findViewById(R.id.botaoPularLogin);
+        //btnPularLogin.setOnClickListener(v -> {
+          //  Intent intent = new Intent(MainActivity.this, TesteActivity.class);
+            //startActivity(intent);
+        //});
     }
 }

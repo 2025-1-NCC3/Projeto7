@@ -1,9 +1,8 @@
-package br.com.fecapccp.ubersminions;
+package br.fecap.pi.ubersaferroutes;
 
 import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -34,13 +33,13 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import br.fecap.pi.ubersaferroutes.R;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -80,8 +79,8 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
                 .findFragmentById(R.id.map);
         if (mapFragment != null) {
             mapFragment.getMapAsync(this);
-        }
 
+        }
         int status = GoogleApiAvailability.getInstance().isGooglePlayServicesAvailable(this);
         if (status != ConnectionResult.SUCCESS) {
             Toast.makeText(this, "Google Play Services não disponível", Toast.LENGTH_LONG).show();
@@ -220,7 +219,6 @@ public class TesteActivity extends AppCompatActivity implements OnMapReadyCallba
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
         LatLng fecap = new LatLng(-23.5572348, -46.6369578);
-        mMap.addMarker(new MarkerOptions().position(fecap).title("Marcador na FECAP"));
         mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(fecap, 17));
     }
 

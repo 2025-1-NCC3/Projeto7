@@ -1,4 +1,4 @@
-package br.com.fecapccp.ubersminions;
+package br.fecap.pi.ubersaferroutes;
 
 import retrofit2.Call;
 import retrofit2.http.Body;

@@ -1,6 +1,4 @@
-package br.com.fecapccp.ubersminions;
-
-import com.google.gson.annotations.SerializedName;
+package br.fecap.pi.ubersaferroutes;
 
 public class UserActivity {
 

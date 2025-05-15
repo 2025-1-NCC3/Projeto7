@@ -28,7 +28,7 @@
             android:value="AIzaSyCd-aAutuNpkOv1LOtYDFxJBJT5ATt7Oeo" />
 
         <activity
-            android:name=".MainActivity"
+            android:name="br.fecap.pi.ubersaferroutes.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -36,10 +36,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".LoginActivity" />
-        <activity android:name=".CadastroActivity" />
-        <activity android:name=".RecuperarActivity" />
-        <activity android:name=".TesteActivity" />
+        <activity android:name="br.fecap.pi.ubersaferroutes.LoginActivity" />
+        <activity android:name="br.fecap.pi.ubersaferroutes.CadastroActivity" />
+        <activity android:name="br.fecap.pi.ubersaferroutes.RecuperarActivity" />
+        <activity android:name="br.fecap.pi.ubersaferroutes.TesteActivity" />
     </application>
 
 </manifest>
