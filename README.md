@@ -49,7 +49,11 @@ Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança d
 |-->imagens<br>
 |-->src<br>
   &emsp;|-->Backend<br>
+  &emsp; &emsp;|--> node-login-backend
   &emsp;|-->Frontend<br>
+  &emsp; &emsp;|--> Uber's minions-Entrega1/prototipoProjeto
+  &emsp; &emsp;|--> Uber's minions-Entrega2/UbersMinions
+  &emsp; &emsp;|--> Uber's minions-Entrega3/UbersMinions
 |readme.md<br>
 
 
@@ -60,7 +64,7 @@ Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança d
 1. Abra o arquivo final no Android Studio, certifique que o Gradle está sincronizado corretamente, vá no Menu Principal e siga a ordem:
 2. Build -> Build App Bundle(s) / App APK(s) -> Build APK(s)
 3. Após seguir esses passos, clique em "locate" na notificação do Android Studio sobre o build.
-4. Deverá aparecer um arquivo com o nome "app-debug.apk"
+4. O arquivo deve aparecer com o nome "app-debug.apk"
 5. Conecte um cabo USB no PC/notebook e no seu aparelho e mova o arquivo para uma pasta no seu celular
 
 
@@ -68,9 +72,8 @@ Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança d
 
 Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
 
-```sh
-Coloque código do prompt de comnando se for necessário
-```
+1. Android Studio: <https://developer.android.com/studio>
+
 
 ## 📋 Licença/License
 <p xmlns:cc="http://creativecommons.org/ns#" xmlns:dct="http://purl.org/dc/terms/"><a property="dct:title" rel="cc:attributionURL" href="https://github.com/2025-1-NCC3/Projeto7">Uber - Safer Route</a> by <a rel="cc:attributionURL dct:creator" property="cc:attributionName" href="https://github.com/2025-1-NCC3/Projeto7">Uber's Minions</a> is licensed under <a href="https://creativecommons.org/licenses/by/4.0/?ref=chooser-v1" target="_blank" rel="license noopener noreferrer" style="display:inline-block;">Creative Commons Attribution 4.0 International<img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/cc.svg?ref=chooser-v1" alt=""><img style="height:22px!important;margin-left:3px;vertical-align:text-bottom;" src="https://mirrors.creativecommons.org/presskit/icons/by.svg?ref=chooser-v1" alt=""></a></p>
@@ -79,8 +82,14 @@ Coloque código do prompt de comnando se for necessário
 
 Aqui estão as referências usadas no projeto.
 
-1. Servidor passado em sala
-2. Tabelas Tabnet Ministério da Saúde: <http://tabnet.datasus.gov.br/cgi/tabcgi.exe?sim/cnv/obt10uf.def>
-3. Curso de Android Studio (CFBCursos): <https://www.youtube.com/playlist?list=PLx4x_zx8csUhKFaIEC-3ODcoHUEqXjG73>
+1. Servidor passado em sala de aula
+2. Android Studio: <https://developer.android.com/studio>
+3. Lincença: <https://creativecommons.org/chooser/>
+4. Tabelas Tabnet Ministério da Saúde: <http://tabnet.datasus.gov.br/cgi/tabcgi.exe?sim/cnv/obt10uf.def>
+5. Curso de Android Studio (CFBCursos): <https://www.youtube.com/playlist?list=PLx4x_zx8csUhKFaIEC-3ODcoHUEqXjG73>
+6. API Google Maps: <https://developers.google.com/maps/documentation>
+7. Google Cloud Console: <https://console.cloud.google.com/welcome?inv=1&invt=AbxgCA&project=vibrant-brand-440813-f7>
+8. Editor de imagens Gimp: <https://www.gimp.org/>
+9. Dados para análise: <a href="/documentos/Entrega%201/An%C3%A1lise%20Descritiva%20de%20Dados/Fontes%20utilizadas.txt">Diretório com os links</a>
 
 
