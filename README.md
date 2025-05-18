@@ -49,11 +49,11 @@ Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança d
 |-->imagens<br>
 |-->src<br>
   &emsp;|-->Backend<br>
-  &emsp; &emsp;|--> node-login-backend
+  &emsp; &emsp;|--> node-login-backend<br>
   &emsp;|-->Frontend<br>
-  &emsp; &emsp;|--> Uber's minions-Entrega1/prototipoProjeto
-  &emsp; &emsp;|--> Uber's minions-Entrega2/UbersMinions
-  &emsp; &emsp;|--> Uber's minions-Entrega3/UbersMinions
+  &emsp; &emsp;|--> Uber's minions-Entrega1/prototipoProjeto<br>
+  &emsp; &emsp;|--> Uber's minions-Entrega2/UbersMinions<br>
+  &emsp; &emsp;|--> Uber's minions-Entrega3/UbersMinions<br>
 |readme.md<br>
 
 
@@ -70,7 +70,7 @@ Esse projeto ajuda a motoristas e passageiros da Uber sentirem mais segurança d
 
 ## 💻 Configuração para Desenvolvimento
 
-Descreva como instalar todas as dependências para desenvolvimento e como rodar um test-suite automatizado de algum tipo. Se necessário, faça isso para múltiplas plataformas.
+Para abrir este projeto você necessita da(s) seguinte(s) ferramenta(s):
 
 1. Android Studio: <https://developer.android.com/studio>
 
